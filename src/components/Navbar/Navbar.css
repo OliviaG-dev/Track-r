@@ -1,0 +1,116 @@
+.navbar {
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.navbar-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 70px;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: #212529;
+  font-weight: 800;
+  font-size: 24px;
+  transition: all 0.2s ease;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+  padding: 0;
+}
+
+.navbar-brand:hover {
+  color: #667eea;
+}
+
+.navbar-logo {
+  font-size: 32px;
+  line-height: 1;
+}
+
+.navbar-title {
+  display: none;
+}
+
+.navbar-links {
+  display: flex;
+  gap: 8px;
+}
+
+.navbar-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #495057;
+  font-weight: 600;
+  font-size: 15px;
+  transition: all 0.2s ease;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.navbar-link:hover {
+  background: #f1f3f5;
+  color: #212529;
+}
+
+.navbar-link--active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.navbar-link--active:hover {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.navbar-link-icon {
+  font-size: 18px;
+}
+
+.navbar-link-label {
+  display: none;
+}
+
+/* Responsive */
+@media (min-width: 640px) {
+  .navbar-title {
+    display: block;
+  }
+  
+  .navbar-link-label {
+    display: block;
+  }
+}
+
+@media (min-width: 1024px) {
+  .navbar-container {
+    padding: 0 48px;
+  }
+  
+  .navbar-links {
+    gap: 12px;
+  }
+  
+  .navbar-link {
+    padding: 12px 20px;
+  }
+}
