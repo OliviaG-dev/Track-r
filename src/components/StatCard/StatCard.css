@@ -54,8 +54,8 @@
 }
 
 .stat-card-trend--positive {
-  background: #d3f9d8;
-  color: #2f9e44;
+  background: var(--color-success-light);
+  color: var(--color-success);
 }
 
 .stat-card-trend--negative {

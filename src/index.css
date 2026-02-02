@@ -1,3 +1,14 @@
+/* Logo palette — bleu, vert, or */
+:root {
+  --color-primary: #00bfff;
+  --color-secondary: #32cd32;
+  --color-accent: #ffc107;
+  --gradient-primary: linear-gradient(135deg, #00bfff 0%, #32cd32 100%);
+  --color-success: #28a745;
+  --color-success-light: #d4edda;
+  --shadow-primary: 0 4px 12px rgba(0, 191, 255, 0.35);
+}
+
 /* Reset & Base Styles */
 * {
   margin: 0;
@@ -6,13 +17,13 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #212529;
-  background: #f5f7fa;
+  background: #f5f9fc;
 }
 
 #root {
@@ -39,7 +50,12 @@ body {
 }
 
 /* Typography */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-weight: 700;
 }
 
@@ -71,7 +87,8 @@ a {
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
   }
   50% {

@@ -4,7 +4,7 @@
 
 .app {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+  background: linear-gradient(135deg, #f0f9ff 0%, #f5f7fa 50%, #f0fff4 100%);
 }
 
 .app-content {

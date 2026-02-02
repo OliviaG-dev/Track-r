@@ -25,7 +25,7 @@
 }
 
 .accounts-subtitle strong {
-  color: #667eea;
+  color: var(--color-primary);
   font-weight: 700;
 }
 
@@ -170,7 +170,7 @@
     justify-content: space-between;
     align-items: flex-start;
   }
-  
+
   .accounts-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -180,7 +180,7 @@
   .accounts {
     padding: 48px;
   }
-  
+
   .accounts-grid {
     grid-template-columns: repeat(3, 1fr);
   }

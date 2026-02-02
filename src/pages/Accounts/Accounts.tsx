@@ -1,48 +1,55 @@
-import { useState } from 'react';
-import { useStore } from '@/store';
-import { formatCurrency, getAccountTypeLabel, getAccountTypeIcon } from '@/utils/helpers';
-import Button from '@/components/Button/Button';
-import Card from '@/components/Card/Card';
-import Modal from '@/components/Modal/Modal';
-import Input from '@/components/Input/Input';
-import Select from '@/components/Select/Select';
-import './Accounts.css';
+import { useState } from "react";
+import { useStore } from "@/store";
+import {
+  formatCurrency,
+  getAccountTypeLabel,
+  getAccountTypeIcon,
+} from "@/utils/helpers";
+import Button from "@/components/Button/Button";
+import Card from "@/components/Card/Card";
+import Modal from "@/components/Modal/Modal";
+import Input from "@/components/Input/Input";
+import Select from "@/components/Select/Select";
+import "./Accounts.css";
 
 export default function Accounts() {
   const { accounts, addAccount, deleteAccount, user } = useStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
-    name: '',
-    type: 'checking' as const,
+    name: "",
+    type: "checking" as const,
     initialBalance: 0,
-    color: '#667eea',
+    color: "#00BFFF",
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
-    
+
     addAccount({
       ...formData,
       userId: user.id,
     });
-    
+
     setFormData({
-      name: '',
-      type: 'checking',
+      name: "",
+      type: "checking",
       initialBalance: 0,
-      color: '#667eea',
+      color: "#00BFFF",
     });
     setIsModalOpen(false);
   };
 
   const handleDelete = (id: string) => {
-    if (window.confirm('Êtes-vous sûr de vouloir supprimer ce compte ?')) {
+    if (window.confirm("Êtes-vous sûr de vouloir supprimer ce compte ?")) {
       deleteAccount(id);
     }
   };
 
-  const totalBalance = accounts.reduce((sum, acc) => sum + acc.currentBalance, 0);
+  const totalBalance = accounts.reduce(
+    (sum, acc) => sum + acc.currentBalance,
+    0
+  );
 
   return (
     <div className="accounts">
@@ -53,9 +60,7 @@ export default function Accounts() {
             Solde total : <strong>{formatCurrency(totalBalance)}</strong>
           </p>
         </div>
-        <Button onClick={() => setIsModalOpen(true)}>
-          + Nouveau compte
-        </Button>
+        <Button onClick={() => setIsModalOpen(true)}>+ Nouveau compte</Button>
       </div>
 
       {accounts.length === 0 ? (
@@ -63,7 +68,9 @@ export default function Accounts() {
           <div className="accounts-empty">
             <span className="accounts-empty-icon">🏦</span>
             <h2>Aucun compte</h2>
-            <p>Créez votre premier compte pour commencer à suivre vos finances.</p>
+            <p>
+              Créez votre premier compte pour commencer à suivre vos finances.
+            </p>
             <Button onClick={() => setIsModalOpen(true)}>
               Créer un compte
             </Button>
@@ -71,11 +78,17 @@ export default function Accounts() {
         </Card>
       ) : (
         <div className="accounts-grid">
-          {accounts.map(account => (
+          {accounts.map((account) => (
             <Card key={account.id}>
               <div className="account-card">
                 <div className="account-card-header">
-                  <div className="account-card-icon" style={{ background: `${account.color}20`, color: account.color }}>
+                  <div
+                    className="account-card-icon"
+                    style={{
+                      background: `${account.color}20`,
+                      color: account.color,
+                    }}
+                  >
                     {getAccountTypeIcon(account.type)}
                   </div>
                   <button
@@ -87,7 +100,9 @@ export default function Accounts() {
                   </button>
                 </div>
                 <h3 className="account-card-name">{account.name}</h3>
-                <p className="account-card-type">{getAccountTypeLabel(account.type)}</p>
+                <p className="account-card-type">
+                  {getAccountTypeLabel(account.type)}
+                </p>
                 <div className="account-card-balance">
                   <span className="account-card-balance-label">Solde</span>
                   <span className="account-card-balance-value">
@@ -109,9 +124,7 @@ export default function Accounts() {
             <Button variant="secondary" onClick={() => setIsModalOpen(false)}>
               Annuler
             </Button>
-            <Button onClick={handleSubmit}>
-              Créer
-            </Button>
+            <Button onClick={handleSubmit}>Créer</Button>
           </>
         }
       >
@@ -124,37 +137,53 @@ export default function Accounts() {
             required
             placeholder="Compte courant"
           />
-          
+
           <Select
             label="Type de compte"
             value={formData.type}
-            onChange={(e) => setFormData({ ...formData, type: e.target.value as any })}
+            onChange={(e) =>
+              setFormData({ ...formData, type: e.target.value as any })
+            }
             options={[
-              { value: 'checking', label: 'Compte courant' },
-              { value: 'savings', label: 'Épargne' },
-              { value: 'cash', label: 'Espèces' },
-              { value: 'card', label: 'Carte bancaire' },
+              { value: "checking", label: "Compte courant" },
+              { value: "savings", label: "Épargne" },
+              { value: "cash", label: "Espèces" },
+              { value: "card", label: "Carte bancaire" },
             ]}
           />
-          
+
           <Input
             label="Solde initial"
             icon="💰"
             type="number"
             step="0.01"
             value={formData.initialBalance}
-            onChange={(e) => setFormData({ ...formData, initialBalance: parseFloat(e.target.value) || 0 })}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                initialBalance: parseFloat(e.target.value) || 0,
+              })
+            }
             required
           />
-          
+
           <div className="account-form-color">
             <label className="input-label">Couleur</label>
             <div className="account-form-colors">
-              {['#667eea', '#51cf66', '#ff6b6b', '#4ecdc4', '#ffa94d', '#f783ac'].map(color => (
+              {[
+                "#00BFFF",
+                "#32CD32",
+                "#FFC107",
+                "#ff6b6b",
+                "#4ecdc4",
+                "#ffa94d",
+              ].map((color) => (
                 <button
                   key={color}
                   type="button"
-                  className={`account-form-color-option ${formData.color === color ? 'active' : ''}`}
+                  className={`account-form-color-option ${
+                    formData.color === color ? "active" : ""
+                  }`}
                   style={{ background: color }}
                   onClick={() => setFormData({ ...formData, color })}
                 />

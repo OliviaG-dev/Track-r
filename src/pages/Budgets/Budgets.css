@@ -128,7 +128,7 @@
 }
 
 .budget-card-progress-fill.success {
-  background: #51cf66;
+  background: var(--color-secondary);
 }
 
 .budget-card-progress-fill.warning {
@@ -154,7 +154,7 @@
 }
 
 .budget-card-remaining-ok {
-  color: #51cf66;
+  color: var(--color-secondary);
   font-weight: 600;
   font-size: 15px;
 }
@@ -225,7 +225,7 @@
     justify-content: space-between;
     align-items: flex-start;
   }
-  
+
   .budgets-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -235,7 +235,7 @@
   .budgets {
     padding: 48px;
   }
-  
+
   .budgets-grid {
     grid-template-columns: repeat(3, 1fr);
   }

@@ -1,6 +1,6 @@
-import './Navbar.css';
+import "./Navbar.css";
 
-type Page = 'dashboard' | 'accounts' | 'transactions' | 'budgets' | 'goals';
+type Page = "dashboard" | "accounts" | "transactions" | "budgets" | "goals";
 
 interface NavbarProps {
   currentPage: Page;
@@ -8,27 +8,37 @@ interface NavbarProps {
 }
 
 const PAGES: { id: Page; icon: string; label: string }[] = [
-  { id: 'dashboard', icon: '📊', label: 'Dashboard' },
-  { id: 'accounts', icon: '🏦', label: 'Comptes' },
-  { id: 'transactions', icon: '💸', label: 'Transactions' },
-  { id: 'budgets', icon: '🎯', label: 'Budgets' },
-  { id: 'goals', icon: '🏆', label: 'Objectifs' },
+  { id: "dashboard", icon: "📊", label: "Dashboard" },
+  { id: "accounts", icon: "🏦", label: "Comptes" },
+  { id: "transactions", icon: "💸", label: "Transactions" },
+  { id: "budgets", icon: "🎯", label: "Budgets" },
+  { id: "goals", icon: "🏆", label: "Objectifs" },
 ];
 
 export default function Navbar({ currentPage, onNavigate }: NavbarProps) {
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        <button type="button" className="navbar-brand" onClick={() => onNavigate('dashboard')}>
-          <span className="navbar-logo">€</span>
-          <span className="navbar-title">Track€r</span>
+        <button
+          type="button"
+          className="navbar-brand"
+          onClick={() => onNavigate("dashboard")}
+        >
+          <span className="navbar-logo">
+            <img src="/logo.png" alt="Track€r" />
+          </span>
+          <span className="navbar-title">
+            Track<span className="navbar-title-euro">€</span>r
+          </span>
         </button>
         <div className="navbar-links">
-          {PAGES.map(page => (
+          {PAGES.map((page) => (
             <button
               key={page.id}
               type="button"
-              className={`navbar-link ${currentPage === page.id ? 'navbar-link--active' : ''}`}
+              className={`navbar-link ${
+                currentPage === page.id ? "navbar-link--active" : ""
+              }`}
               onClick={() => onNavigate(page.id)}
             >
               <span className="navbar-link-icon">{page.icon}</span>

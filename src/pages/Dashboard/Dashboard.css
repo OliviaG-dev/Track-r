@@ -13,7 +13,7 @@
   font-size: 36px;
   font-weight: 800;
   color: #212529;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-primary);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -54,7 +54,7 @@
 }
 
 .insight-card--info {
-  border-left-color: #4dabf7;
+  border-left-color: var(--color-primary);
 }
 
 .insight-card--warning {
@@ -62,7 +62,7 @@
 }
 
 .insight-card--success {
-  border-left-color: #51cf66;
+  border-left-color: var(--color-secondary);
 }
 
 .insight-card--danger {
@@ -214,7 +214,7 @@
   .dashboard-stats {
     grid-template-columns: repeat(2, 1fr);
   }
-  
+
   .dashboard-insights {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -224,7 +224,7 @@
   .dashboard {
     padding: 48px;
   }
-  
+
   .dashboard-stats {
     grid-template-columns: repeat(4, 1fr);
   }

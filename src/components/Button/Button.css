@@ -18,13 +18,13 @@
 
 /* Variants */
 .button--primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-primary);
   color: white;
 }
 
 .button--primary:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  box-shadow: var(--shadow-primary);
 }
 
 .button--secondary {
@@ -47,13 +47,13 @@
 }
 
 .button--success {
-  background: #51cf66;
+  background: var(--color-secondary);
   color: white;
 }
 
 .button--success:hover:not(:disabled) {
-  background: #40c057;
-  box-shadow: 0 4px 12px rgba(81, 207, 102, 0.3);
+  background: #28a745;
+  box-shadow: 0 4px 12px rgba(50, 205, 50, 0.35);
 }
 
 /* Sizes */

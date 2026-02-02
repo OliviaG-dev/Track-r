@@ -91,7 +91,7 @@
 }
 
 .transaction-item-amount.income {
-  color: #51cf66;
+  color: var(--color-secondary);
 }
 
 .transaction-item-amount.expense {
@@ -161,12 +161,12 @@
 }
 
 .transaction-form-type-btn:hover {
-  border-color: #667eea;
+  border-color: var(--color-primary);
 }
 
 .transaction-form-type-btn.active {
-  border-color: #667eea;
-  background: #667eea;
+  border-color: var(--color-primary);
+  background: var(--gradient-primary);
   color: white;
 }
 
@@ -177,7 +177,7 @@
     justify-content: space-between;
     align-items: flex-start;
   }
-  
+
   .transactions-filters {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -187,7 +187,7 @@
   .transactions {
     padding: 48px;
   }
-  
+
   .transactions-filters {
     grid-template-columns: repeat(4, 1fr);
   }
