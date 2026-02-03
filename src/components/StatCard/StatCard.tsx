@@ -1,7 +1,7 @@
 import "./StatCard.css";
 
 interface StatCardProps {
-  icon: string;
+  icon: React.ReactNode;
   label: string;
   value: string;
   trend?: {

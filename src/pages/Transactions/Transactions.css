@@ -119,8 +119,8 @@
 }
 
 .transactions-empty-icon {
-  font-size: 64px;
-  display: block;
+  display: flex;
+  justify-content: center;
   margin-bottom: 16px;
 }
 
@@ -149,6 +149,9 @@
 }
 
 .transaction-form-type-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   padding: 16px;
   border: 2px solid #e9ecef;
   border-radius: 8px;

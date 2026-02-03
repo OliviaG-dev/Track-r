@@ -41,6 +41,13 @@
   font-size: 24px;
   font-weight: 700;
   color: #212529;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dashboard-section-title svg {
+  flex-shrink: 0;
 }
 
 .dashboard-insights {
@@ -185,8 +192,8 @@
 }
 
 .dashboard-empty-icon {
-  font-size: 64px;
-  display: block;
+  display: flex;
+  justify-content: center;
   margin-bottom: 16px;
 }
 

@@ -110,8 +110,8 @@
 }
 
 .accounts-empty-icon {
-  font-size: 64px;
-  display: block;
+  display: flex;
+  justify-content: center;
   margin-bottom: 16px;
 }
 

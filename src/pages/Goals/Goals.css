@@ -193,6 +193,10 @@
 }
 
 .goal-card-completed {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   text-align: center;
   padding: 12px;
   background: var(--color-success-light);
@@ -214,8 +218,8 @@
 }
 
 .goals-empty-icon {
-  font-size: 64px;
-  display: block;
+  display: flex;
+  justify-content: center;
   margin-bottom: 16px;
 }
 

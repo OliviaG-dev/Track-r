@@ -1,15 +1,17 @@
 import { useState } from "react";
 import { useStore } from "@/store";
-import {
-  formatCurrency,
-  getAccountTypeLabel,
-  getAccountTypeIcon,
-} from "@/utils/helpers";
+import { formatCurrency, getAccountTypeLabel } from "@/utils/helpers";
 import Button from "@/components/Button/Button";
 import Card from "@/components/Card/Card";
 import Modal from "@/components/Modal/Modal";
 import Input from "@/components/Input/Input";
 import Select from "@/components/Select/Select";
+import {
+  IconAccounts,
+  IconMoney,
+  IconTrash,
+  AccountTypeIcon,
+} from "@/components/Icons";
 import "./Accounts.css";
 
 export default function Accounts() {
@@ -29,6 +31,7 @@ export default function Accounts() {
     addAccount({
       ...formData,
       userId: user.id,
+      currentBalance: formData.initialBalance,
     });
 
     setFormData({
@@ -66,7 +69,9 @@ export default function Accounts() {
       {accounts.length === 0 ? (
         <Card>
           <div className="accounts-empty">
-            <span className="accounts-empty-icon">🏦</span>
+            <span className="accounts-empty-icon">
+              <IconAccounts size={48} />
+            </span>
             <h2>Aucun compte</h2>
             <p>
               Créez votre premier compte pour commencer à suivre vos finances.
@@ -89,14 +94,14 @@ export default function Accounts() {
                       color: account.color,
                     }}
                   >
-                    {getAccountTypeIcon(account.type)}
+                    <AccountTypeIcon type={account.type} size={24} />
                   </div>
                   <button
                     className="account-card-delete"
                     onClick={() => handleDelete(account.id)}
                     title="Supprimer"
                   >
-                    🗑️
+                    <IconTrash size={18} />
                   </button>
                 </div>
                 <h3 className="account-card-name">{account.name}</h3>
@@ -131,7 +136,7 @@ export default function Accounts() {
         <form onSubmit={handleSubmit} className="account-form">
           <Input
             label="Nom du compte"
-            icon="🏦"
+            icon={<IconAccounts size={20} />}
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             required
@@ -154,7 +159,7 @@ export default function Accounts() {
 
           <Input
             label="Solde initial"
-            icon="💰"
+            icon={<IconMoney size={20} />}
             type="number"
             step="0.01"
             value={formData.initialBalance}

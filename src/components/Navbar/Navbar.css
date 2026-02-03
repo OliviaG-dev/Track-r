@@ -104,7 +104,15 @@
 }
 
 .navbar-link-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 18px;
+}
+
+.navbar-link-icon svg {
+  display: block;
+  flex-shrink: 0;
 }
 
 .navbar-link-label {

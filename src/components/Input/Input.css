@@ -53,6 +53,15 @@
   transform: translateY(-50%);
   font-size: 18px;
   pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.input-icon svg {
+  display: block;
+  width: 20px;
+  height: 20px;
 }
 
 .input-error {

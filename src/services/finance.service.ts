@@ -1,4 +1,12 @@
-import { Transaction, Category, Budget, Account, DashboardStats, BudgetStatus, Insight } from '@/types';
+import {
+  Transaction,
+  Category,
+  Budget,
+  Account,
+  DashboardStats,
+  BudgetStatus,
+  Insight,
+} from "@/types";
 
 function startOfMonth(d: Date): Date {
   return new Date(d.getFullYear(), d.getMonth(), 1);
@@ -6,7 +14,10 @@ function startOfMonth(d: Date): Date {
 function endOfMonth(d: Date): Date {
   return new Date(d.getFullYear(), d.getMonth() + 1, 0, 23, 59, 59, 999);
 }
-function isWithinInterval(date: Date, { start, end }: { start: Date; end: Date }): boolean {
+function isWithinInterval(
+  date: Date,
+  { start, end }: { start: Date; end: Date }
+): boolean {
   const t = date.getTime();
   return t >= start.getTime() && t <= end.getTime();
 }
@@ -14,7 +25,7 @@ function subMonths(d: Date, n: number): Date {
   return new Date(d.getFullYear(), d.getMonth() - n, d.getDate());
 }
 function formatMonthYear(d: Date): string {
-  return d.toLocaleDateString('fr-FR', { month: 'short', year: 'numeric' });
+  return d.toLocaleDateString("fr-FR", { month: "short", year: "numeric" });
 }
 
 export class FinanceService {
@@ -24,35 +35,46 @@ export class FinanceService {
   }
 
   // Calcul des revenus pour une période
-  static calculateIncome(transactions: Transaction[], startDate: Date, endDate: Date): number {
+  static calculateIncome(
+    transactions: Transaction[],
+    startDate: Date,
+    endDate: Date
+  ): number {
     return transactions
-      .filter(t => 
-        t.type === 'income' && 
-        isWithinInterval(new Date(t.date), { start: startDate, end: endDate })
+      .filter(
+        (t) =>
+          t.type === "income" &&
+          isWithinInterval(new Date(t.date), { start: startDate, end: endDate })
       )
       .reduce((sum, t) => sum + t.amount, 0);
   }
 
   // Calcul des dépenses pour une période
-  static calculateExpenses(transactions: Transaction[], startDate: Date, endDate: Date): number {
+  static calculateExpenses(
+    transactions: Transaction[],
+    startDate: Date,
+    endDate: Date
+  ): number {
     return transactions
-      .filter(t => 
-        t.type === 'expense' && 
-        isWithinInterval(new Date(t.date), { start: startDate, end: endDate })
+      .filter(
+        (t) =>
+          t.type === "expense" &&
+          isWithinInterval(new Date(t.date), { start: startDate, end: endDate })
       )
       .reduce((sum, t) => sum + t.amount, 0);
   }
 
   // Dépenses par catégorie
   static getExpensesByCategory(
-    transactions: Transaction[], 
-    categories: Category[], 
-    startDate: Date, 
+    transactions: Transaction[],
+    categories: Category[],
+    startDate: Date,
     endDate: Date
   ) {
-    const expenseTransactions = transactions.filter(t => 
-      t.type === 'expense' && 
-      isWithinInterval(new Date(t.date), { start: startDate, end: endDate })
+    const expenseTransactions = transactions.filter(
+      (t) =>
+        t.type === "expense" &&
+        isWithinInterval(new Date(t.date), { start: startDate, end: endDate })
     );
 
     const total = expenseTransactions.reduce((sum, t) => sum + t.amount, 0);
@@ -65,41 +87,49 @@ export class FinanceService {
       return acc;
     }, {} as Record<string, number>);
 
-    return Object.entries(grouped).map(([categoryId, amount]) => {
-      const category = categories.find(c => c.id === categoryId);
-      return {
-        categoryId,
-        categoryName: category?.name || 'Inconnu',
-        amount,
-        percentage: total > 0 ? (amount / total) * 100 : 0,
-      };
-    }).sort((a, b) => b.amount - a.amount);
+    return Object.entries(grouped)
+      .map(([categoryId, amount]) => {
+        const category = categories.find((c) => c.id === categoryId);
+        return {
+          categoryId,
+          categoryName: category?.name || "Inconnu",
+          amount,
+          percentage: total > 0 ? (amount / total) * 100 : 0,
+        };
+      })
+      .sort((a, b) => b.amount - a.amount);
   }
 
   // Évolution du solde sur les derniers mois
-  static getBalanceEvolution(transactions: Transaction[], accounts: Account[], months: number = 6) {
+  static getBalanceEvolution(
+    transactions: Transaction[],
+    accounts: Account[],
+    months: number = 6
+  ) {
     const evolution: { date: string; balance: number }[] = [];
     const now = new Date();
 
     for (let i = months - 1; i >= 0; i--) {
       const targetDate = subMonths(now, i);
-      const monthStart = startOfMonth(targetDate);
       const monthEnd = endOfMonth(targetDate);
 
       // Calculer le solde à la fin du mois
-      const transactionsUpToDate = transactions.filter(t => 
-        new Date(t.date) <= monthEnd
+      const transactionsUpToDate = transactions.filter(
+        (t) => new Date(t.date) <= monthEnd
       );
 
       const totalIncome = transactionsUpToDate
-        .filter(t => t.type === 'income')
+        .filter((t) => t.type === "income")
         .reduce((sum, t) => sum + t.amount, 0);
 
       const totalExpenses = transactionsUpToDate
-        .filter(t => t.type === 'expense')
+        .filter((t) => t.type === "expense")
         .reduce((sum, t) => sum + t.amount, 0);
 
-      const initialBalance = accounts.reduce((sum, acc) => sum + acc.initialBalance, 0);
+      const initialBalance = accounts.reduce(
+        (sum, acc) => sum + acc.initialBalance,
+        0
+      );
       const balance = initialBalance + totalIncome - totalExpenses;
 
       evolution.push({
@@ -113,8 +143,8 @@ export class FinanceService {
 
   // Statut des budgets
   static getBudgetStatus(
-    budget: Budget, 
-    transactions: Transaction[], 
+    budget: Budget,
+    transactions: Transaction[],
     category: Category
   ): BudgetStatus {
     const now = new Date();
@@ -122,10 +152,14 @@ export class FinanceService {
     const monthEnd = endOfMonth(now);
 
     const spent = transactions
-      .filter(t => 
-        t.categoryId === budget.categoryId &&
-        t.type === 'expense' &&
-        isWithinInterval(new Date(t.date), { start: monthStart, end: monthEnd })
+      .filter(
+        (t) =>
+          t.categoryId === budget.categoryId &&
+          t.type === "expense" &&
+          isWithinInterval(new Date(t.date), {
+            start: monthStart,
+            end: monthEnd,
+          })
       )
       .reduce((sum, t) => sum + t.amount, 0);
 
@@ -144,7 +178,7 @@ export class FinanceService {
   // Génération d'insights automatiques
   static generateInsights(
     transactions: Transaction[],
-    accounts: Account[],
+    _accounts: Account[],
     budgets: Budget[],
     categories: Category[]
   ): Insight[] {
@@ -154,45 +188,59 @@ export class FinanceService {
     const monthEnd = endOfMonth(now);
 
     // Revenus vs Dépenses
-    const monthlyIncome = this.calculateIncome(transactions, monthStart, monthEnd);
-    const monthlyExpenses = this.calculateExpenses(transactions, monthStart, monthEnd);
-    
+    const monthlyIncome = this.calculateIncome(
+      transactions,
+      monthStart,
+      monthEnd
+    );
+    const monthlyExpenses = this.calculateExpenses(
+      transactions,
+      monthStart,
+      monthEnd
+    );
+
     if (monthlyIncome > 0) {
       const expenseRatio = (monthlyExpenses / monthlyIncome) * 100;
-      
+
       if (expenseRatio > 90) {
         insights.push({
-          id: 'high-expenses',
-          type: 'warning',
-          title: 'Dépenses élevées',
-          description: `Tes dépenses représentent ${expenseRatio.toFixed(0)}% de tes revenus ce mois-ci.`,
-          icon: '⚠️',
+          id: "high-expenses",
+          type: "warning",
+          title: "Dépenses élevées",
+          description: `Tes dépenses représentent ${expenseRatio.toFixed(
+            0
+          )}% de tes revenus ce mois-ci.`,
+          icon: "⚠️",
         });
       } else if (expenseRatio < 70) {
         insights.push({
-          id: 'good-savings',
-          type: 'success',
-          title: 'Belle épargne !',
-          description: `Tu économises ${(100 - expenseRatio).toFixed(0)}% de tes revenus ce mois-ci 👍`,
-          icon: '💰',
+          id: "good-savings",
+          type: "success",
+          title: "Belle épargne !",
+          description: `Tu économises ${(100 - expenseRatio).toFixed(
+            0
+          )}% de tes revenus ce mois-ci 👍`,
+          icon: "💰",
         });
       }
     }
 
     // Budgets dépassés
-    budgets.forEach(budget => {
-      const category = categories.find(c => c.id === budget.categoryId);
+    budgets.forEach((budget) => {
+      const category = categories.find((c) => c.id === budget.categoryId);
       if (!category) return;
 
       const status = this.getBudgetStatus(budget, transactions, category);
-      
+
       if (status.isOver) {
         insights.push({
           id: `budget-over-${budget.id}`,
-          type: 'danger',
+          type: "danger",
           title: `Budget ${category.name} dépassé`,
-          description: `Tu as dépensé ${status.spent.toFixed(2)}€ sur ${budget.amount}€ prévus.`,
-          icon: '🚨',
+          description: `Tu as dépensé ${status.spent.toFixed(2)}€ sur ${
+            budget.amount
+          }€ prévus.`,
+          icon: "🚨",
         });
       }
     });
@@ -200,16 +248,23 @@ export class FinanceService {
     // Tendance positive
     const lastMonthStart = startOfMonth(subMonths(now, 1));
     const lastMonthEnd = endOfMonth(subMonths(now, 1));
-    const lastMonthExpenses = this.calculateExpenses(transactions, lastMonthStart, lastMonthEnd);
-    
+    const lastMonthExpenses = this.calculateExpenses(
+      transactions,
+      lastMonthStart,
+      lastMonthEnd
+    );
+
     if (monthlyExpenses < lastMonthExpenses && lastMonthExpenses > 0) {
-      const reduction = ((lastMonthExpenses - monthlyExpenses) / lastMonthExpenses) * 100;
+      const reduction =
+        ((lastMonthExpenses - monthlyExpenses) / lastMonthExpenses) * 100;
       insights.push({
-        id: 'expenses-down',
-        type: 'success',
-        title: 'Dépenses en baisse',
-        description: `Tes dépenses ont baissé de ${reduction.toFixed(0)}% par rapport au mois dernier 📉`,
-        icon: '✅',
+        id: "expenses-down",
+        type: "success",
+        title: "Dépenses en baisse",
+        description: `Tes dépenses ont baissé de ${reduction.toFixed(
+          0
+        )}% par rapport au mois dernier 📉`,
+        icon: "✅",
       });
     }
 
@@ -227,10 +282,23 @@ export class FinanceService {
     const monthEnd = endOfMonth(now);
 
     const totalBalance = this.calculateTotalBalance(accounts);
-    const monthlyIncome = this.calculateIncome(transactions, monthStart, monthEnd);
-    const monthlyExpenses = this.calculateExpenses(transactions, monthStart, monthEnd);
+    const monthlyIncome = this.calculateIncome(
+      transactions,
+      monthStart,
+      monthEnd
+    );
+    const monthlyExpenses = this.calculateExpenses(
+      transactions,
+      monthStart,
+      monthEnd
+    );
     const netSavings = monthlyIncome - monthlyExpenses;
-    const expensesByCategory = this.getExpensesByCategory(transactions, categories, monthStart, monthEnd);
+    const expensesByCategory = this.getExpensesByCategory(
+      transactions,
+      categories,
+      monthStart,
+      monthEnd
+    );
     const balanceEvolution = this.getBalanceEvolution(transactions, accounts);
 
     return {

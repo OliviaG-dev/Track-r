@@ -4,7 +4,28 @@ import { FinanceService } from "@/services/finance.service";
 import { formatCurrency } from "@/utils/helpers";
 import StatCard from "@/components/StatCard/StatCard";
 import Card from "@/components/Card/Card";
+import {
+  IconDashboard,
+  IconMoney,
+  IconChartUp,
+  IconChartDown,
+  IconDiamond,
+  IconLightbulb,
+  IconWarning,
+  IconCheck,
+  IconAlert,
+} from "@/components/Icons";
 import "./Dashboard.css";
+
+function InsightIcon({ icon }: { icon: string }) {
+  const map: Record<string, React.ReactNode> = {
+    "💰": <IconMoney size={24} />,
+    "⚠️": <IconWarning size={24} />,
+    "🚨": <IconAlert size={24} />,
+    "✅": <IconCheck size={24} />,
+  };
+  return <>{map[icon] ?? <IconLightbulb size={24} />}</>;
+}
 
 export default function Dashboard() {
   const { accounts, transactions, categories, budgets } = useStore();
@@ -30,7 +51,9 @@ export default function Dashboard() {
         </div>
         <Card>
           <div className="dashboard-empty">
-            <span className="dashboard-empty-icon">📊</span>
+            <span className="dashboard-empty-icon">
+              <IconDashboard size={48} />
+            </span>
             <h2>Bienvenue sur Track€r !</h2>
             <p>
               Commencez par créer votre premier compte pour suivre vos finances.
@@ -50,25 +73,25 @@ export default function Dashboard() {
 
       <div className="dashboard-stats">
         <StatCard
-          icon="💰"
+          icon={<IconMoney size={28} />}
           label="Solde total"
           value={formatCurrency(stats.totalBalance)}
           color="#00BFFF"
         />
         <StatCard
-          icon="📈"
+          icon={<IconChartUp size={28} />}
           label="Revenus du mois"
           value={formatCurrency(stats.monthlyIncome)}
           color="#32CD32"
         />
         <StatCard
-          icon="📉"
+          icon={<IconChartDown size={28} />}
           label="Dépenses du mois"
           value={formatCurrency(stats.monthlyExpenses)}
           color="#ff6b6b"
         />
         <StatCard
-          icon="💎"
+          icon={<IconDiamond size={28} />}
           label="Épargne nette"
           value={formatCurrency(stats.netSavings)}
           trend={{
@@ -81,7 +104,9 @@ export default function Dashboard() {
 
       {insights.length > 0 && (
         <div className="dashboard-section">
-          <h2 className="dashboard-section-title">💡 Insights</h2>
+          <h2 className="dashboard-section-title">
+            <IconLightbulb size={24} /> Insights
+          </h2>
           <div className="dashboard-insights">
             {insights.map((insight) => (
               <Card
@@ -89,7 +114,9 @@ export default function Dashboard() {
                 className={`insight-card insight-card--${insight.type}`}
               >
                 <div className="insight-header">
-                  <span className="insight-icon">{insight.icon}</span>
+                  <span className="insight-icon">
+                    <InsightIcon icon={insight.icon} />
+                  </span>
                   <h3 className="insight-title">{insight.title}</h3>
                 </div>
                 <p className="insight-description">{insight.description}</p>
@@ -100,7 +127,9 @@ export default function Dashboard() {
       )}
 
       <div className="dashboard-section">
-        <h2 className="dashboard-section-title">📊 Dépenses par catégorie</h2>
+        <h2 className="dashboard-section-title">
+          <IconDashboard size={24} /> Dépenses par catégorie
+        </h2>
         {stats.expensesByCategory.length > 0 ? (
           <Card>
             <div className="expenses-list">
@@ -150,7 +179,9 @@ export default function Dashboard() {
       </div>
 
       <div className="dashboard-section">
-        <h2 className="dashboard-section-title">📈 Évolution du solde</h2>
+        <h2 className="dashboard-section-title">
+          <IconChartUp size={24} /> Évolution du solde
+        </h2>
         <Card>
           <div className="balance-evolution">
             {stats.balanceEvolution.map((item, index) => (

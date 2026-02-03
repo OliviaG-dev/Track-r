@@ -1,4 +1,11 @@
 import "./Navbar.css";
+import {
+  IconDashboard,
+  IconAccounts,
+  IconTransactions,
+  IconBudgets,
+  IconGoals,
+} from "../Icons";
 
 type Page = "dashboard" | "accounts" | "transactions" | "budgets" | "goals";
 
@@ -7,12 +14,16 @@ interface NavbarProps {
   onNavigate: (page: Page) => void;
 }
 
-const PAGES: { id: Page; icon: string; label: string }[] = [
-  { id: "dashboard", icon: "📊", label: "Dashboard" },
-  { id: "accounts", icon: "🏦", label: "Comptes" },
-  { id: "transactions", icon: "💸", label: "Transactions" },
-  { id: "budgets", icon: "🎯", label: "Budgets" },
-  { id: "goals", icon: "🏆", label: "Objectifs" },
+const PAGES: {
+  id: Page;
+  Icon: React.ComponentType<{ size?: number; className?: string }>;
+  label: string;
+}[] = [
+  { id: "dashboard", Icon: IconDashboard, label: "Dashboard" },
+  { id: "accounts", Icon: IconAccounts, label: "Comptes" },
+  { id: "transactions", Icon: IconTransactions, label: "Transactions" },
+  { id: "budgets", Icon: IconBudgets, label: "Budgets" },
+  { id: "goals", Icon: IconGoals, label: "Objectifs" },
 ];
 
 export default function Navbar({ currentPage, onNavigate }: NavbarProps) {
@@ -32,19 +43,24 @@ export default function Navbar({ currentPage, onNavigate }: NavbarProps) {
           </span>
         </button>
         <div className="navbar-links">
-          {PAGES.map((page) => (
-            <button
-              key={page.id}
-              type="button"
-              className={`navbar-link ${
-                currentPage === page.id ? "navbar-link--active" : ""
-              }`}
-              onClick={() => onNavigate(page.id)}
-            >
-              <span className="navbar-link-icon">{page.icon}</span>
-              <span className="navbar-link-label">{page.label}</span>
-            </button>
-          ))}
+          {PAGES.map((page) => {
+            const Icon = page.Icon;
+            return (
+              <button
+                key={page.id}
+                type="button"
+                className={`navbar-link ${
+                  currentPage === page.id ? "navbar-link--active" : ""
+                }`}
+                onClick={() => onNavigate(page.id)}
+              >
+                <span className="navbar-link-icon">
+                  <Icon size={20} />
+                </span>
+                <span className="navbar-link-label">{page.label}</span>
+              </button>
+            );
+          })}
         </div>
       </div>
     </nav>
