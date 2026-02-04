@@ -101,6 +101,111 @@
   line-height: 1.6;
 }
 
+/* Dépenses par catégorie : carte + diagramme circulaire */
+.expenses-by-category-wrapper {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  align-items: stretch;
+}
+
+.expenses-by-category-wrapper > .card {
+  height: 100%;
+  min-height: 0;
+}
+
+.expenses-list-card {
+  flex: 1;
+}
+
+.expenses-chart-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  padding: 28px 20px;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 191, 255, 0.04) 0%,
+    rgba(255, 255, 255, 1) 24px
+  );
+  border: 1px solid rgba(0, 191, 255, 0.12);
+}
+
+.expenses-chart-label {
+  margin: 0 0 12px 0;
+  width: 100%;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 700;
+  color: #212529;
+  letter-spacing: 0.05em;
+}
+
+.expenses-pie-chart-wrap {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  flex-shrink: 0;
+  margin: 4px auto;
+}
+
+.expenses-pie-chart {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.expenses-pie-chart-hole {
+  position: absolute;
+  inset: 22%;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+}
+
+.expenses-pie-legend {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  justify-content: center;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.expenses-pie-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: transparent;
+  transition: background 0.15s ease;
+}
+
+.expenses-pie-legend-item:hover {
+  background: #f8f9fa;
+}
+
+.expenses-pie-legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.9);
+}
+
+.expenses-pie-legend-label {
+  flex: 1;
+  color: #212529;
+  font-weight: 600;
+  min-width: 0;
+}
+
 .expenses-list {
   display: flex;
   flex-direction: column;
@@ -234,5 +339,15 @@
 
   .dashboard-stats {
     grid-template-columns: repeat(4, 1fr);
+  }
+
+  .expenses-by-category-wrapper {
+    grid-template-columns: 1.2fr 1fr;
+    align-items: start;
+  }
+
+  .expenses-pie-chart-wrap {
+    width: 220px;
+    height: 220px;
   }
 }

@@ -126,51 +126,102 @@ export default function Dashboard() {
         </div>
       )}
 
-      <div className="dashboard-section">
+      <div className="dashboard-section dashboard-section-expenses">
         <h2 className="dashboard-section-title">
           <IconDashboard size={24} /> Dépenses par catégorie
         </h2>
         {stats.expensesByCategory.length > 0 ? (
-          <Card>
-            <div className="expenses-list">
-              {stats.expensesByCategory.slice(0, 5).map((expense) => {
-                const category = categories.find(
-                  (c) => c.id === expense.categoryId
-                );
-                return (
-                  <div key={expense.categoryId} className="expense-item">
-                    <div className="expense-item-header">
-                      {category && (
-                        <span className="expense-item-icon">
-                          {category.icon}
+          <div className="expenses-by-category-wrapper">
+            <Card className="expenses-list-card">
+              <div className="expenses-list">
+                {stats.expensesByCategory.slice(0, 5).map((expense) => {
+                  const category = categories.find(
+                    (c) => c.id === expense.categoryId
+                  );
+                  return (
+                    <div key={expense.categoryId} className="expense-item">
+                      <div className="expense-item-header">
+                        {category && (
+                          <span className="expense-item-icon">
+                            {category.icon}
+                          </span>
+                        )}
+                        <span className="expense-item-name">
+                          {expense.categoryName}
                         </span>
-                      )}
-                      <span className="expense-item-name">
-                        {expense.categoryName}
-                      </span>
+                      </div>
+                      <div className="expense-item-amount">
+                        <span className="expense-item-value">
+                          {formatCurrency(expense.amount)}
+                        </span>
+                        <span className="expense-item-percentage">
+                          {expense.percentage.toFixed(0)}%
+                        </span>
+                      </div>
+                      <div className="expense-item-bar">
+                        <div
+                          className="expense-item-bar-fill"
+                          style={{
+                            width: `${expense.percentage}%`,
+                            background: category?.color || "#00BFFF",
+                          }}
+                        />
+                      </div>
                     </div>
-                    <div className="expense-item-amount">
-                      <span className="expense-item-value">
-                        {formatCurrency(expense.amount)}
-                      </span>
-                      <span className="expense-item-percentage">
-                        {expense.percentage.toFixed(0)}%
-                      </span>
-                    </div>
-                    <div className="expense-item-bar">
-                      <div
-                        className="expense-item-bar-fill"
+                  );
+                })}
+              </div>
+            </Card>
+            <Card className="expenses-chart-card">
+              <p className="expenses-chart-label">Répartition du mois</p>
+              <div className="expenses-pie-chart-wrap">
+                <div
+                  className="expenses-pie-chart"
+                  style={{
+                    background: `conic-gradient(${stats.expensesByCategory
+                      .map((expense, i) => {
+                        const category = categories.find(
+                          (c) => c.id === expense.categoryId
+                        );
+                        const start =
+                          stats.expensesByCategory
+                            .slice(0, i)
+                            .reduce((s, e) => s + e.percentage, 0) || 0;
+                        const end = start + expense.percentage;
+                        return `${
+                          category?.color || "#00BFFF"
+                        } ${start}% ${end}%`;
+                      })
+                      .join(", ")})`,
+                  }}
+                />
+                <div className="expenses-pie-chart-hole" />
+              </div>
+              <div className="expenses-pie-legend">
+                {stats.expensesByCategory.map((expense) => {
+                  const category = categories.find(
+                    (c) => c.id === expense.categoryId
+                  );
+                  return (
+                    <div
+                      key={expense.categoryId}
+                      className="expenses-pie-legend-item"
+                    >
+                      <span
+                        className="expenses-pie-legend-dot"
                         style={{
-                          width: `${expense.percentage}%`,
                           background: category?.color || "#00BFFF",
                         }}
                       />
+                      <span className="expenses-pie-legend-label">
+                        {expense.categoryName}
+                      </span>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
-          </Card>
+                  );
+                })}
+              </div>
+            </Card>
+          </div>
         ) : (
           <Card>
             <p className="dashboard-no-data">Aucune dépense ce mois-ci</p>
