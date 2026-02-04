@@ -143,27 +143,84 @@
   letter-spacing: 0.05em;
 }
 
+@keyframes expenses-pie-in {
+  from {
+    opacity: 0;
+    transform: scale(0.7) rotate(-15deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
 .expenses-pie-chart-wrap {
   position: relative;
   width: 200px;
   height: 200px;
   flex-shrink: 0;
   margin: 4px auto;
+  animation: expenses-pie-in 0.6s ease-out forwards;
 }
 
-.expenses-pie-chart {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+.expenses-pie-svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.08));
 }
 
-.expenses-pie-chart-hole {
-  position: absolute;
-  inset: 22%;
-  border-radius: 50%;
-  background: white;
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+.expenses-pie-segment {
+  cursor: pointer;
+  transform-origin: 50% 50%;
+  transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+.expenses-pie-segment:hover,
+.expenses-pie-segment.expenses-pie-segment--hover {
+  filter: brightness(1.12);
+  transform: scale(1.02);
+}
+
+.expenses-pie-center {
+  pointer-events: none;
+}
+
+.expenses-pie-center-bg {
+  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.06));
+}
+
+.expenses-pie-center-content {
+  transform-origin: 100px 100px;
+  animation: expenses-pie-center-in 0.25s ease-out forwards;
+}
+
+@keyframes expenses-pie-center-in {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.expenses-pie-center-pct {
+  font-size: 22px;
+  font-weight: 800;
+  fill: #212529;
+}
+
+.expenses-pie-center-name {
+  font-size: 11px;
+  font-weight: 600;
+  fill: #495057;
+}
+
+.expenses-pie-center-hint {
+  font-size: 12px;
+  font-weight: 500;
+  fill: #adb5bd;
 }
 
 .expenses-pie-legend {

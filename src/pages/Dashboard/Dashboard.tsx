@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useStore } from "@/store";
 import { FinanceService } from "@/services/finance.service";
 import { formatCurrency } from "@/utils/helpers";
@@ -17,6 +17,28 @@ import {
 } from "@/components/Icons";
 import "./Dashboard.css";
 
+function getDonutSegmentPath(
+  startPct: number,
+  endPct: number,
+  outerR = 100,
+  innerR = 44,
+  cx = 100,
+  cy = 100
+): string {
+  const startRad = (startPct / 100) * 2 * Math.PI - Math.PI / 2;
+  const endRad = (endPct / 100) * 2 * Math.PI - Math.PI / 2;
+  const largeArc = endPct - startPct > 50 ? 1 : 0;
+  const x1 = cx + outerR * Math.cos(startRad);
+  const y1 = cy + outerR * Math.sin(startRad);
+  const x2 = cx + outerR * Math.cos(endRad);
+  const y2 = cy + outerR * Math.sin(endRad);
+  const x3 = cx + innerR * Math.cos(endRad);
+  const y3 = cy + innerR * Math.sin(endRad);
+  const x4 = cx + innerR * Math.cos(startRad);
+  const y4 = cy + innerR * Math.sin(startRad);
+  return `M ${x1} ${y1} A ${outerR} ${outerR} 0 ${largeArc} 1 ${x2} ${y2} L ${x3} ${y3} A ${innerR} ${innerR} 0 ${largeArc} 0 ${x4} ${y4} Z`;
+}
+
 function InsightIcon({ icon }: { icon: string }) {
   const map: Record<string, React.ReactNode> = {
     "💰": <IconMoney size={24} />,
@@ -29,6 +51,7 @@ function InsightIcon({ icon }: { icon: string }) {
 
 export default function Dashboard() {
   const { accounts, transactions, categories, budgets } = useStore();
+  const [hoveredSegment, setHoveredSegment] = useState<number | null>(null);
 
   const stats = useMemo(() => {
     return FinanceService.getDashboardStats(transactions, accounts, categories);
@@ -175,27 +198,79 @@ export default function Dashboard() {
             <Card className="expenses-chart-card">
               <p className="expenses-chart-label">Répartition du mois</p>
               <div className="expenses-pie-chart-wrap">
-                <div
-                  className="expenses-pie-chart"
-                  style={{
-                    background: `conic-gradient(${stats.expensesByCategory
-                      .map((expense, i) => {
-                        const category = categories.find(
-                          (c) => c.id === expense.categoryId
-                        );
-                        const start =
-                          stats.expensesByCategory
-                            .slice(0, i)
-                            .reduce((s, e) => s + e.percentage, 0) || 0;
-                        const end = start + expense.percentage;
-                        return `${
-                          category?.color || "#00BFFF"
-                        } ${start}% ${end}%`;
-                      })
-                      .join(", ")})`,
-                  }}
-                />
-                <div className="expenses-pie-chart-hole" />
+                <svg
+                  className="expenses-pie-svg"
+                  viewBox="0 0 200 200"
+                  aria-label="Répartition des dépenses par catégorie"
+                >
+                  {stats.expensesByCategory.map((expense, i) => {
+                    const category = categories.find(
+                      (c) => c.id === expense.categoryId
+                    );
+                    const startPct =
+                      stats.expensesByCategory
+                        .slice(0, i)
+                        .reduce((s, e) => s + e.percentage, 0) || 0;
+                    const endPct = startPct + expense.percentage;
+                    const isHovered = hoveredSegment === i;
+                    return (
+                      <path
+                        key={expense.categoryId}
+                        d={getDonutSegmentPath(startPct, endPct)}
+                        fill={category?.color || "#00BFFF"}
+                        className={`expenses-pie-segment ${
+                          isHovered ? "expenses-pie-segment--hover" : ""
+                        }`}
+                        onMouseEnter={() => setHoveredSegment(i)}
+                        onMouseLeave={() => setHoveredSegment(null)}
+                      />
+                    );
+                  })}
+                  <g className="expenses-pie-center">
+                    <circle
+                      cx="100"
+                      cy="100"
+                      r="44"
+                      fill="white"
+                      className="expenses-pie-center-bg"
+                    />
+                    {hoveredSegment !== null ? (
+                      <g className="expenses-pie-center-content">
+                        <text
+                          x="100"
+                          y="96"
+                          textAnchor="middle"
+                          className="expenses-pie-center-pct"
+                        >
+                          {stats.expensesByCategory[
+                            hoveredSegment
+                          ].percentage.toFixed(0)}
+                          %
+                        </text>
+                        <text
+                          x="100"
+                          y="112"
+                          textAnchor="middle"
+                          className="expenses-pie-center-name"
+                        >
+                          {
+                            stats.expensesByCategory[hoveredSegment]
+                              .categoryName
+                          }
+                        </text>
+                      </g>
+                    ) : (
+                      <text
+                        x="100"
+                        y="100"
+                        textAnchor="middle"
+                        className="expenses-pie-center-hint"
+                      >
+                        Survoler
+                      </text>
+                    )}
+                  </g>
+                </svg>
               </div>
               <div className="expenses-pie-legend">
                 {stats.expensesByCategory.map((expense) => {
