@@ -1,4 +1,4 @@
-import './Card.css';
+import "./Card.css";
 
 interface CardProps {
   children: React.ReactNode;
@@ -6,12 +6,24 @@ interface CardProps {
   subtitle?: string;
   icon?: string;
   className?: string;
+  contentClassName?: string;
   onClick?: () => void;
 }
 
-export default function Card({ children, title, subtitle, icon, className = '', onClick }: CardProps) {
+export default function Card({
+  children,
+  title,
+  subtitle,
+  icon,
+  className = "",
+  contentClassName = "",
+  onClick,
+}: CardProps) {
   return (
-    <div className={`card ${onClick ? 'card--clickable' : ''} ${className}`} onClick={onClick}>
+    <div
+      className={`card ${onClick ? "card--clickable" : ""} ${className}`}
+      onClick={onClick}
+    >
       {(title || subtitle || icon) && (
         <div className="card-header">
           {icon && <span className="card-icon">{icon}</span>}
@@ -21,7 +33,11 @@ export default function Card({ children, title, subtitle, icon, className = '', 
           </div>
         </div>
       )}
-      <div className="card-content">
+      <div
+        className={
+          contentClassName ? `card-content ${contentClassName}` : "card-content"
+        }
+      >
         {children}
       </div>
     </div>

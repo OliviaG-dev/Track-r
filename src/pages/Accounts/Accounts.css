@@ -2,6 +2,13 @@
   max-width: 1400px;
   margin: 0 auto;
   padding: 32px 24px;
+  background: radial-gradient(
+    ellipse at top,
+    #1a1d24 0%,
+    #0f1115 50%,
+    #08090c 100%
+  );
+  min-height: 100vh;
 }
 
 .accounts-header {
@@ -15,18 +22,32 @@
   margin: 0;
   font-size: 36px;
   font-weight: 800;
-  color: #212529;
+  color: transparent;
+  background: linear-gradient(120deg, #f8e39a 0%, #f4c654 40%, #f1a722 80%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .accounts-subtitle {
   margin: 8px 0 0 0;
   font-size: 16px;
-  color: #868e96;
+  color: #9ca3af;
 }
 
 .accounts-subtitle strong {
-  color: var(--color-primary);
+  color: #f4c654;
   font-weight: 700;
+}
+
+.accounts .card {
+  background: #15171b;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+}
+
+.accounts .card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
 }
 
 .accounts-grid {
@@ -61,12 +82,14 @@
   border: none;
   font-size: 20px;
   cursor: pointer;
-  opacity: 0.5;
+  color: #9ca3af;
+  opacity: 0.8;
   transition: all 0.2s ease;
   padding: 4px;
 }
 
 .account-card-delete:hover {
+  color: #f87171;
   opacity: 1;
   transform: scale(1.1);
 }
@@ -75,13 +98,13 @@
   margin: 0 0 4px 0;
   font-size: 20px;
   font-weight: 700;
-  color: #212529;
+  color: #e5e7eb;
 }
 
 .account-card-type {
   margin: 0 0 16px 0;
   font-size: 14px;
-  color: #868e96;
+  color: #9ca3af;
 }
 
 .account-card-balance {
@@ -89,19 +112,19 @@
   flex-direction: column;
   gap: 4px;
   padding-top: 16px;
-  border-top: 1px solid #e9ecef;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .account-card-balance-label {
   font-size: 13px;
-  color: #868e96;
+  color: #9ca3af;
   font-weight: 600;
 }
 
 .account-card-balance-value {
   font-size: 24px;
   font-weight: 700;
-  color: #212529;
+  color: #f8f9fa;
 }
 
 .accounts-empty {
@@ -118,13 +141,13 @@
 .accounts-empty h2 {
   margin: 0 0 8px 0;
   font-size: 24px;
-  color: #212529;
+  color: #e5e7eb;
 }
 
 .accounts-empty p {
   margin: 0 0 24px 0;
   font-size: 16px;
-  color: #868e96;
+  color: #9ca3af;
 }
 
 .account-form {
@@ -159,8 +182,8 @@
 }
 
 .account-form-color-option.active {
-  border-color: #212529;
-  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+  border-color: #f4c654;
+  box-shadow: 0 0 0 3px rgba(244, 198, 84, 0.25);
 }
 
 /* Responsive */

@@ -2,6 +2,13 @@
   max-width: 1400px;
   margin: 0 auto;
   padding: 32px 24px;
+  background: radial-gradient(
+    ellipse at top,
+    #1a1d24 0%,
+    #0f1115 50%,
+    #08090c 100%
+  );
+  min-height: 100vh;
 }
 
 .budgets-header {
@@ -15,13 +22,27 @@
   margin: 0;
   font-size: 36px;
   font-weight: 800;
-  color: #212529;
+  color: transparent;
+  background: linear-gradient(120deg, #f8e39a 0%, #f4c654 40%, #f1a722 80%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .budgets-subtitle {
   margin: 8px 0 0 0;
   font-size: 16px;
-  color: #868e96;
+  color: #9ca3af;
+}
+
+.budgets .card {
+  background: #15171b;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+}
+
+.budgets .card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
 }
 
 .budgets-grid {
@@ -56,12 +77,14 @@
   border: none;
   font-size: 20px;
   cursor: pointer;
-  opacity: 0.5;
+  color: #9ca3af;
+  opacity: 0.8;
   transition: all 0.2s ease;
   padding: 4px;
 }
 
 .budget-card-delete:hover {
+  color: #f87171;
   opacity: 1;
   transform: scale(1.1);
 }
@@ -70,7 +93,7 @@
   margin: 0 0 16px 0;
   font-size: 20px;
   font-weight: 700;
-  color: #212529;
+  color: #e5e7eb;
 }
 
 .budget-card-amounts {
@@ -88,22 +111,22 @@
 
 .budget-card-amount-label {
   font-size: 13px;
-  color: #868e96;
+  color: #9ca3af;
   font-weight: 600;
 }
 
 .budget-card-amount-value {
   font-size: 18px;
   font-weight: 700;
-  color: #212529;
+  color: #f8f9fa;
 }
 
 .budget-card-amount-value.warning {
-  color: #ffa94d;
+  color: #fbbf24;
 }
 
 .budget-card-amount-value.danger {
-  color: #ff6b6b;
+  color: #f87171;
 }
 
 .budget-card-progress {
@@ -116,7 +139,7 @@
 .budget-card-progress-bar {
   flex: 1;
   height: 12px;
-  background: #f1f3f5;
+  background: rgba(255, 255, 255, 0.08);
   border-radius: 6px;
   overflow: hidden;
 }
@@ -128,39 +151,39 @@
 }
 
 .budget-card-progress-fill.success {
-  background: var(--color-secondary);
+  background: #34d399;
 }
 
 .budget-card-progress-fill.warning {
-  background: #ffa94d;
+  background: #fbbf24;
 }
 
 .budget-card-progress-fill.danger {
-  background: #ff6b6b;
+  background: #f87171;
 }
 
 .budget-card-progress-text {
   font-size: 14px;
   font-weight: 700;
-  color: #495057;
+  color: #9ca3af;
   min-width: 45px;
   text-align: right;
 }
 
 .budget-card-remaining {
   padding-top: 12px;
-  border-top: 1px solid #e9ecef;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
   text-align: center;
 }
 
 .budget-card-remaining-ok {
-  color: var(--color-secondary);
+  color: #34d399;
   font-weight: 600;
   font-size: 15px;
 }
 
 .budget-card-remaining-over {
-  color: #ff6b6b;
+  color: #f87171;
   font-weight: 600;
   font-size: 15px;
 }
@@ -179,13 +202,13 @@
 .budgets-empty h2 {
   margin: 0 0 8px 0;
   font-size: 24px;
-  color: #212529;
+  color: #e5e7eb;
 }
 
 .budgets-empty p {
   margin: 0 0 24px 0;
   font-size: 16px;
-  color: #868e96;
+  color: #9ca3af;
 }
 
 .budget-form {
@@ -199,7 +222,8 @@
   flex-direction: column;
   gap: 12px;
   padding: 16px;
-  background: #f8f9fa;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 8px;
 }
 
@@ -209,7 +233,7 @@
   gap: 8px;
   cursor: pointer;
   font-size: 15px;
-  color: #495057;
+  color: #e5e7eb;
 }
 
 .budget-form-alert input[type="checkbox"] {

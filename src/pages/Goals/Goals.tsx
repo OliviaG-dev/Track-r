@@ -69,7 +69,9 @@ export default function Goals() {
           <h1 className="goals-title">Objectifs</h1>
           <p className="goals-subtitle">{goals.length} objectif(s) en cours</p>
         </div>
-        <Button onClick={() => setIsModalOpen(true)}>+ Nouvel objectif</Button>
+        <Button onClick={() => setIsModalOpen(true)}>
+          <span className="button-plus">+</span> Nouvel objectif
+        </Button>
       </div>
 
       {goals.length === 0 ? (

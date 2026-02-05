@@ -9,13 +9,150 @@ import {
   IconMoney,
   IconChartUp,
   IconChartDown,
+  IconAnalysis,
   IconDiamond,
   IconLightbulb,
   IconWarning,
   IconCheck,
   IconAlert,
+  CategoryIcon,
 } from "@/components/Icons";
 import "./Dashboard.css";
+
+const BALANCE_CHART_PADDING = { left: 12, right: 12, top: 28, bottom: 36 };
+const BALANCE_CHART_VIEW = { width: 800, height: 220 };
+
+function useBalanceChartData(evolution: { date: string; balance: number }[]) {
+  return useMemo(() => {
+    if (evolution.length === 0)
+      return { path: "", fillPath: "", points: [], minY: 0, maxY: 0 };
+    const { left, right, top, bottom } = BALANCE_CHART_PADDING;
+    const w = BALANCE_CHART_VIEW.width - left - right;
+    const h = BALANCE_CHART_VIEW.height - top - bottom;
+    const balances = evolution.map((e) => e.balance);
+    const minB = Math.min(...balances);
+    const maxB = Math.max(...balances);
+    const range = maxB - minB || 1;
+    const n = evolution.length;
+    const points = evolution.map((e, i) => {
+      const x = left + (n === 1 ? w / 2 : (i / (n - 1)) * w);
+      const y = top + h - ((e.balance - minB) / range) * h;
+      return { x, y, ...e };
+    });
+    const linePath = points
+      .map((p, i) => `${i === 0 ? "M" : "L"} ${p.x} ${p.y}`)
+      .join(" ");
+    const fillPath = `${linePath} L ${left + w} ${top + h} L ${left} ${
+      top + h
+    } Z`;
+    return {
+      path: linePath,
+      fillPath,
+      points,
+      minY: minB,
+      maxY: maxB,
+    };
+  }, [evolution]);
+}
+
+function BalanceEvolutionSvg({
+  evolution,
+  formatCurrency,
+}: {
+  evolution: { date: string; balance: number }[];
+  formatCurrency: (n: number) => string;
+}) {
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const { path, fillPath, points } = useBalanceChartData(evolution);
+  const { width, height } = BALANCE_CHART_VIEW;
+
+  if (evolution.length === 0) return null;
+
+  const tooltipHeight = 34;
+  const tooltipAbove = (py: number) => py - tooltipHeight - 10;
+  const tooltipBelow = (py: number) => py + 18;
+
+  return (
+    <svg
+      className="balance-evolution-svg"
+      viewBox={`0 0 ${width} ${height}`}
+      preserveAspectRatio="xMidYMid meet"
+      overflow="visible"
+      aria-label="Évolution du solde"
+    >
+      <defs>
+        <linearGradient id="balance-chart-fill" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#f4c654" stopOpacity="0.25" />
+          <stop offset="100%" stopColor="#f4c654" stopOpacity="0.02" />
+        </linearGradient>
+      </defs>
+      <path d={fillPath} fill="url(#balance-chart-fill)" />
+      <path
+        d={path}
+        fill="none"
+        stroke="#f4c654"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      {points.map((p, i) => (
+        <g
+          key={i}
+          onMouseEnter={() => setHoveredIndex(i)}
+          onMouseLeave={() => setHoveredIndex(null)}
+        >
+          <circle
+            cx={p.x}
+            cy={p.y}
+            r={hoveredIndex === i ? 6 : 4}
+            fill="#15171b"
+            stroke="#f4c654"
+            strokeWidth="2"
+            className="balance-evolution-point"
+          />
+          {hoveredIndex === i &&
+            (() => {
+              const showBelow = p.y < height * 0.4;
+              const ty = showBelow ? tooltipBelow(p.y) : tooltipAbove(p.y);
+              const text1Y = ty + 14;
+              const text2Y = ty + 26;
+              return (
+                <g className="balance-evolution-tooltip">
+                  <rect
+                    x={p.x - 48}
+                    y={ty}
+                    width={96}
+                    height={tooltipHeight}
+                    rx={6}
+                    fill="rgba(33, 37, 41, 0.92)"
+                  />
+                  <text
+                    x={p.x}
+                    y={text1Y}
+                    textAnchor="middle"
+                    fill="white"
+                    fontSize="11"
+                    fontWeight="600"
+                  >
+                    {formatCurrency(p.balance)}
+                  </text>
+                  <text
+                    x={p.x}
+                    y={text2Y}
+                    textAnchor="middle"
+                    fill="rgba(255,255,255,0.85)"
+                    fontSize="10"
+                  >
+                    {p.date}
+                  </text>
+                </g>
+              );
+            })()}
+        </g>
+      ))}
+    </svg>
+  );
+}
 
 function getDonutSegmentPath(
   startPct: number,
@@ -47,6 +184,19 @@ function InsightIcon({ icon }: { icon: string }) {
     "✅": <IconCheck size={24} />,
   };
   return <>{map[icon] ?? <IconLightbulb size={24} />}</>;
+}
+
+function formatInsightDescription(text: string) {
+  const parts = text.split(/(\d+%)/g);
+  return parts.map((part, i) =>
+    /\d+%/.test(part) ? (
+      <span key={i} className="insight-percentage-value">
+        {part}
+      </span>
+    ) : (
+      part
+    )
+  );
 }
 
 export default function Dashboard() {
@@ -99,13 +249,13 @@ export default function Dashboard() {
           icon={<IconMoney size={28} />}
           label="Solde total"
           value={formatCurrency(stats.totalBalance)}
-          color="#00BFFF"
+          color="#f4c654"
         />
         <StatCard
           icon={<IconChartUp size={28} />}
           label="Revenus du mois"
           value={formatCurrency(stats.monthlyIncome)}
-          color="#32CD32"
+          color="#34d399"
         />
         <StatCard
           icon={<IconChartDown size={28} />}
@@ -121,14 +271,14 @@ export default function Dashboard() {
             value: stats.netSavings >= 0 ? "Positif" : "Négatif",
             isPositive: stats.netSavings >= 0,
           }}
-          color="#4ecdc4"
+          color="#f4c654"
         />
       </div>
 
       {insights.length > 0 && (
         <div className="dashboard-section">
           <h2 className="dashboard-section-title">
-            <IconLightbulb size={24} /> Insights
+            <IconAnalysis size={24} /> Analyse
           </h2>
           <div className="dashboard-insights">
             {insights.map((insight) => (
@@ -142,7 +292,9 @@ export default function Dashboard() {
                   </span>
                   <h3 className="insight-title">{insight.title}</h3>
                 </div>
-                <p className="insight-description">{insight.description}</p>
+                <p className="insight-description">
+                  {formatInsightDescription(insight.description)}
+                </p>
               </Card>
             ))}
           </div>
@@ -156,17 +308,31 @@ export default function Dashboard() {
         {stats.expensesByCategory.length > 0 ? (
           <div className="expenses-by-category-wrapper">
             <Card className="expenses-list-card">
+              <p className="expenses-list-label">Détail des dépenses</p>
               <div className="expenses-list">
-                {stats.expensesByCategory.slice(0, 5).map((expense) => {
+                {stats.expensesByCategory.slice(0, 5).map((expense, index) => {
                   const category = categories.find(
                     (c) => c.id === expense.categoryId
                   );
                   return (
-                    <div key={expense.categoryId} className="expense-item">
+                    <div
+                      key={expense.categoryId}
+                      className="expense-item"
+                      style={{
+                        animationDelay: `${index * 0.08}s`,
+                        ["--bar-width" as string]: `${expense.percentage}%`,
+                      }}
+                    >
                       <div className="expense-item-header">
                         {category && (
-                          <span className="expense-item-icon">
-                            {category.icon}
+                          <span
+                            className="expense-item-icon"
+                            style={{
+                              color: category.color,
+                              backgroundColor: `${category.color}20`,
+                            }}
+                          >
+                            <CategoryIcon type={category.icon} size={20} />
                           </span>
                         )}
                         <span className="expense-item-name">
@@ -185,8 +351,7 @@ export default function Dashboard() {
                         <div
                           className="expense-item-bar-fill"
                           style={{
-                            width: `${expense.percentage}%`,
-                            background: category?.color || "#00BFFF",
+                            background: category?.color || "#f4c654",
                           }}
                         />
                       </div>
@@ -195,7 +360,10 @@ export default function Dashboard() {
                 })}
               </div>
             </Card>
-            <Card className="expenses-chart-card">
+            <Card
+              className="expenses-chart-card"
+              contentClassName="expenses-chart-card-content"
+            >
               <p className="expenses-chart-label">Répartition du mois</p>
               <div className="expenses-pie-chart-wrap">
                 <svg
@@ -217,7 +385,7 @@ export default function Dashboard() {
                       <path
                         key={expense.categoryId}
                         d={getDonutSegmentPath(startPct, endPct)}
-                        fill={category?.color || "#00BFFF"}
+                        fill={category?.color || "#f4c654"}
                         className={`expenses-pie-segment ${
                           isHovered ? "expenses-pie-segment--hover" : ""
                         }`}
@@ -285,7 +453,7 @@ export default function Dashboard() {
                       <span
                         className="expenses-pie-legend-dot"
                         style={{
-                          background: category?.color || "#00BFFF",
+                          background: category?.color || "#f4c654",
                         }}
                       />
                       <span className="expenses-pie-legend-label">
@@ -308,16 +476,35 @@ export default function Dashboard() {
         <h2 className="dashboard-section-title">
           <IconChartUp size={24} /> Évolution du solde
         </h2>
-        <Card>
+        <Card className="balance-evolution-card">
           <div className="balance-evolution">
             {stats.balanceEvolution.map((item, index) => (
-              <div key={index} className="balance-evolution-item">
+              <div
+                key={index}
+                className={`balance-evolution-item ${
+                  index === stats.balanceEvolution.length - 1
+                    ? "balance-evolution-item--current"
+                    : ""
+                }`}
+              >
                 <span className="balance-evolution-date">{item.date}</span>
-                <span className="balance-evolution-value">
+                <span
+                  className={`balance-evolution-value ${
+                    item.balance >= 0
+                      ? "balance-evolution-value--positive"
+                      : "balance-evolution-value--negative"
+                  }`}
+                >
                   {formatCurrency(item.balance)}
                 </span>
               </div>
             ))}
+          </div>
+          <div className="balance-evolution-chart">
+            <BalanceEvolutionSvg
+              evolution={stats.balanceEvolution}
+              formatCurrency={formatCurrency}
+            />
           </div>
         </Card>
       </div>

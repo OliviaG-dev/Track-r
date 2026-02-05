@@ -16,6 +16,7 @@ import {
   IconCalendar,
   IconNote,
   IconBox,
+  CategoryIcon,
 } from "@/components/Icons";
 import "./Transactions.css";
 
@@ -111,7 +112,7 @@ export default function Transactions() {
           </p>
         </div>
         <Button onClick={() => setIsModalOpen(true)}>
-          + Nouvelle transaction
+          <span className="button-plus">+</span> Nouvelle transaction
         </Button>
       </div>
 
@@ -188,7 +189,11 @@ export default function Transactions() {
                       color: category?.color,
                     }}
                   >
-                    {category ? category.icon : <IconBox size={24} />}
+                    {category ? (
+                      <CategoryIcon type={category.icon} size={24} />
+                    ) : (
+                      <IconBox size={24} />
+                    )}
                   </div>
                   <div className="transaction-item-content">
                     <h3 className="transaction-item-category">
@@ -312,7 +317,7 @@ export default function Transactions() {
               { value: "", label: "-- Sélectionner une catégorie --" },
               ...availableCategories.map((cat) => ({
                 value: cat.id,
-                label: `${cat.icon} ${cat.name}`,
+                label: cat.name,
               })),
             ]}
           />

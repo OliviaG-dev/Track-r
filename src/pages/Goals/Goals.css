@@ -2,6 +2,13 @@
   max-width: 1400px;
   margin: 0 auto;
   padding: 32px 24px;
+  background: radial-gradient(
+    ellipse at top,
+    #1a1d24 0%,
+    #0f1115 50%,
+    #08090c 100%
+  );
+  min-height: 100vh;
 }
 
 .goals-header {
@@ -15,13 +22,27 @@
   margin: 0;
   font-size: 36px;
   font-weight: 800;
-  color: #212529;
+  color: transparent;
+  background: linear-gradient(120deg, #f8e39a 0%, #f4c654 40%, #f1a722 80%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .goals-subtitle {
   margin: 8px 0 0 0;
   font-size: 16px;
-  color: #868e96;
+  color: #9ca3af;
+}
+
+.goals .card {
+  background: #15171b;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+}
+
+.goals .card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
 }
 
 .goals-grid {
@@ -49,19 +70,17 @@
   align-items: center;
   justify-content: center;
   font-size: 32px;
-  background: linear-gradient(
-    135deg,
-    rgba(0, 191, 255, 0.2) 0%,
-    rgba(50, 205, 50, 0.2) 100%
-  );
+  background: rgba(244, 198, 84, 0.2);
+  color: #f4c654;
+}
+
+.goal-card-icon svg {
+  color: inherit;
 }
 
 .goal-card-icon.completed {
-  background: linear-gradient(
-    135deg,
-    rgba(50, 205, 50, 0.2) 0%,
-    rgba(40, 167, 69, 0.2) 100%
-  );
+  background: rgba(52, 211, 153, 0.25);
+  color: #34d399;
 }
 
 .goal-card-delete {
@@ -69,12 +88,14 @@
   border: none;
   font-size: 20px;
   cursor: pointer;
-  opacity: 0.5;
+  color: #9ca3af;
+  opacity: 0.8;
   transition: all 0.2s ease;
   padding: 4px;
 }
 
 .goal-card-delete:hover {
+  color: #f87171;
   opacity: 1;
   transform: scale(1.1);
 }
@@ -83,13 +104,13 @@
   margin: 0 0 8px 0;
   font-size: 20px;
   font-weight: 700;
-  color: #212529;
+  color: #e5e7eb;
 }
 
 .goal-card-description {
   margin: 0 0 16px 0;
   font-size: 14px;
-  color: #868e96;
+  color: #9ca3af;
   line-height: 1.5;
 }
 
@@ -98,24 +119,24 @@
   justify-content: space-between;
   align-items: center;
   padding: 8px 0;
-  border-bottom: 1px solid #f1f3f5;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .goal-card-info-label {
   font-size: 13px;
-  color: #868e96;
+  color: #9ca3af;
   font-weight: 600;
 }
 
 .goal-card-info-value {
   font-size: 14px;
-  color: #495057;
+  color: #e5e7eb;
   font-weight: 600;
 }
 
 .goal-card-days {
   font-size: 12px;
-  color: #868e96;
+  color: #9ca3af;
 }
 
 .goal-card-amounts {
@@ -133,14 +154,14 @@
 
 .goal-card-amount-label {
   font-size: 13px;
-  color: #868e96;
+  color: #9ca3af;
   font-weight: 600;
 }
 
 .goal-card-amount-value {
   font-size: 18px;
   font-weight: 700;
-  color: #212529;
+  color: #f8f9fa;
 }
 
 .goal-card-progress {
@@ -153,30 +174,26 @@
 .goal-card-progress-bar {
   flex: 1;
   height: 12px;
-  background: #f1f3f5;
+  background: rgba(255, 255, 255, 0.08);
   border-radius: 6px;
   overflow: hidden;
 }
 
 .goal-card-progress-fill {
   height: 100%;
-  background: var(--gradient-primary);
+  background: linear-gradient(90deg, #f4c654 0%, #f1a722 100%);
   border-radius: 6px;
   transition: width 0.3s ease;
 }
 
 .goal-card-progress-fill.completed {
-  background: linear-gradient(
-    135deg,
-    var(--color-secondary) 0%,
-    var(--color-success) 100%
-  );
+  background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
 }
 
 .goal-card-progress-text {
   font-size: 14px;
   font-weight: 700;
-  color: #495057;
+  color: #9ca3af;
   min-width: 45px;
   text-align: right;
 }
@@ -184,10 +201,11 @@
 .goal-card-remaining {
   text-align: center;
   padding: 12px;
-  background: #f8f9fa;
+  background: rgba(244, 198, 84, 0.12);
+  border: 1px solid rgba(244, 198, 84, 0.2);
   border-radius: 8px;
   font-size: 14px;
-  color: var(--color-primary);
+  color: #f4c654;
   font-weight: 600;
   margin-bottom: 12px;
 }
@@ -199,17 +217,18 @@
   gap: 8px;
   text-align: center;
   padding: 12px;
-  background: var(--color-success-light);
+  background: rgba(52, 211, 153, 0.15);
+  border: 1px solid rgba(52, 211, 153, 0.25);
   border-radius: 8px;
   font-size: 15px;
-  color: var(--color-success);
+  color: #34d399;
   font-weight: 700;
   margin-bottom: 12px;
 }
 
 .goal-card-update {
   padding-top: 12px;
-  border-top: 1px solid #e9ecef;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .goals-empty {
@@ -226,13 +245,13 @@
 .goals-empty h2 {
   margin: 0 0 8px 0;
   font-size: 24px;
-  color: #212529;
+  color: #e5e7eb;
 }
 
 .goals-empty p {
   margin: 0 0 24px 0;
   font-size: 16px;
-  color: #868e96;
+  color: #9ca3af;
 }
 
 .goal-form {

@@ -63,7 +63,9 @@ export default function Accounts() {
             Solde total : <strong>{formatCurrency(totalBalance)}</strong>
           </p>
         </div>
-        <Button onClick={() => setIsModalOpen(true)}>+ Nouveau compte</Button>
+        <Button onClick={() => setIsModalOpen(true)}>
+          <span className="button-plus">+</span> Nouveau compte
+        </Button>
       </div>
 
       {accounts.length === 0 ? (

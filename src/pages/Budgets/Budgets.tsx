@@ -7,7 +7,12 @@ import Card from "@/components/Card/Card";
 import Modal from "@/components/Modal/Modal";
 import Input from "@/components/Input/Input";
 import Select from "@/components/Select/Select";
-import { IconBudgets, IconMoney, IconTrash } from "@/components/Icons";
+import {
+  IconBudgets,
+  IconMoney,
+  IconTrash,
+  CategoryIcon,
+} from "@/components/Icons";
 import "./Budgets.css";
 
 export default function Budgets() {
@@ -69,7 +74,9 @@ export default function Budgets() {
             {budgets.length} budget(s) défini(s)
           </p>
         </div>
-        <Button onClick={() => setIsModalOpen(true)}>+ Nouveau budget</Button>
+        <Button onClick={() => setIsModalOpen(true)}>
+          <span className="button-plus">+</span> Nouveau budget
+        </Button>
       </div>
 
       {budgetStatuses.length === 0 ? (
@@ -105,7 +112,7 @@ export default function Budgets() {
                         color: status.category.color,
                       }}
                     >
-                      {status.category.icon}
+                      <CategoryIcon type={status.category.icon} size={24} />
                     </div>
                     <button
                       className="budget-card-delete"
@@ -199,7 +206,7 @@ export default function Budgets() {
               { value: "", label: "-- Sélectionner une catégorie --" },
               ...expenseCategories.map((cat) => ({
                 value: cat.id,
-                label: `${cat.icon} ${cat.name}`,
+                label: cat.name,
               })),
             ]}
           />
