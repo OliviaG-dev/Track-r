@@ -613,10 +613,22 @@
   margin-top: 24px;
   padding-top: 24px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
-  height: 320px;
-  min-height: 240px;
+  height: 340px;
+  min-height: 280px;
   width: 100%;
   overflow: visible;
+  animation: balance-chart-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes balance-chart-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .balance-evolution-svg {
@@ -624,6 +636,23 @@
   height: 100%;
   display: block;
   overflow: visible;
+  animation: balance-chart-svg-in 0.8s 0.15s ease-out forwards;
+  opacity: 0;
+}
+
+@keyframes balance-chart-svg-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.balance-evolution-axis-label {
+  font-variant-numeric: tabular-nums;
 }
 
 .balance-evolution-point {

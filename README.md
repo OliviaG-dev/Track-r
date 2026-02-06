@@ -1,163 +1,153 @@
-# Track€r — Chaque euro compte. 💰
+# Track€r — Chaque euro compte.
 
 Track€r est une application moderne de gestion de finances personnelles qui permet de suivre chaque euro avec précision, sans complexité.
 
 ## ✨ Fonctionnalités
 
 ### 📊 Dashboard
-- Vue d'ensemble de votre santé financière
-- Solde total de tous vos comptes
-- Revenus et dépenses du mois
-- Épargne nette
-- Insights et analyses automatiques
-- Graphiques des dépenses par catégorie
-- Évolution du solde sur 6 mois
 
-### 🏦 Gestion des Comptes
+- Vue d'ensemble de votre santé financière
+- Solde total, revenus et dépenses du mois, épargne nette
+- **Analyse** : insights automatiques (dépenses élevées, épargne, budgets dépassés, tendances)
+- Dépenses par catégorie : liste détaillée + diagramme circulaire interactif (donut)
+- **Évolution du solde** : grille mensuelle + graphique en courbe (axe Y en valeurs rondes 0, 2k, 4k…)
+- Données de démo au premier lancement (mocks)
+
+### 🏦 Comptes
+
 - Créer plusieurs comptes (courant, épargne, espèces, carte)
 - Personnaliser avec des couleurs
-- Suivi du solde en temps réel
-- Mise à jour automatique à chaque transaction
+- Solde mis à jour automatiquement à chaque transaction
 
 ### 💸 Transactions
+
 - Ajouter revenus et dépenses
-- Catégories personnalisables
-- Filtres avancés (type, compte, catégorie, recherche)
-- Historique complet avec détails
-- Lien automatique avec les comptes
+- Catégories avec icônes (nourriture, transport, logement, etc.)
+- Filtres (type, compte, catégorie, recherche)
+- Historique complet
 
 ### 🎯 Budgets
-- Définir des budgets mensuels par catégorie
-- Suivi en temps réel de la progression
-- Alertes à 75% et 100%
-- Visualisation claire des dépassements
+
+- Budgets mensuels par catégorie
+- Barres de progression (succès / warning / danger)
+- Alertes à 75 % et 100 %
 - Montant restant affiché
 
-### 🏆 Objectifs d'Épargne
-- Créer des objectifs financiers
-- Suivre la progression visuellement
-- Date cible et estimation
-- Mise à jour facile du montant épargné
-- Célébration des objectifs atteints
+### 🏆 Objectifs d'épargne
 
-## 🛠️ Technologies Utilisées
+- Objectifs avec date cible et montant cible
+- Progression visuelle (barre de progression)
+- Mise à jour du montant épargné
+- Mise en avant des objectifs atteints
 
-- **React 18** - Framework UI
-- **TypeScript** - Type safety
-- **Vite** - Build tool ultra-rapide
-- **Zustand** - State management léger
-- **React Router** - Navigation
-- **Chart.js** - Graphiques interactifs
-- **date-fns** - Manipulation de dates
-- **CSS pur** - Styling (pas de Tailwind)
+## 🛠️ Technologies
 
-## 📁 Architecture
+- **React 18** + **TypeScript**
+- **Vite** — build et dev server
+- **Zustand** — state global (comptes, transactions, budgets, objectifs, catégories)
+- **React Router** — navigation (Dashboard, Comptes, Transactions, Budgets, Objectifs)
+- **date-fns** — formatage des dates
+- **CSS** — thème sombre, pas de framework CSS
 
-Chaque composant et page suit l'architecture demandée :
-```
-component/
-├── Component.tsx
-└── Component.css
-```
+## 📁 Structure du projet
 
 ```
 src/
-├── components/        # Composants réutilisables
+├── components/       # Composants réutilisables
 │   ├── Button/
 │   ├── Input/
 │   ├── Select/
 │   ├── Card/
 │   ├── Modal/
 │   ├── Navbar/
-│   └── StatCard/
-├── pages/            # Pages principales
+│   ├── StatCard/
+│   └── Icons/         # Icônes SVG (navbar, catégories, etc.)
+├── pages/
 │   ├── Dashboard/
 │   ├── Accounts/
 │   ├── Transactions/
 │   ├── Budgets/
 │   └── Goals/
-├── services/         # Services (storage, finance)
-├── store/            # State management (Zustand)
-├── types/            # Types TypeScript
-└── utils/            # Utilitaires
+├── services/          # finance.service, storage.service
+├── store/             # Zustand store + persistance localStorage
+├── types/             # Types TypeScript
+├── utils/             # formatCurrency, formatDate, etc.
+└── mocks/             # Données de démo (data.ts)
 ```
 
 ## 🚀 Installation
 
-1. **Cloner le projet**
-```bash
-cd tracker
-```
+1. **Cloner le dépôt et entrer dans le dossier**
+
+   ```bash
+   git clone <url-du-repo>
+   cd tracker
+   ```
 
 2. **Installer les dépendances**
-```bash
-npm install
-```
 
-3. **Lancer le serveur de développement**
-```bash
-npm run dev
-```
+   ```bash
+   npm install
+   ```
+
+3. **Lancer l’application**
+
+   ```bash
+   npm run dev
+   ```
 
 4. **Ouvrir dans le navigateur**
-```
-http://localhost:5173
-```
+   ```
+   http://localhost:5173
+   ```
 
-## 📦 Scripts disponibles
+## 📦 Scripts
 
-- `npm run dev` - Lance le serveur de développement
-- `npm run build` - Build de production
-- `npm run preview` - Prévisualiser le build
+| Commande          | Description              |
+| ----------------- | ------------------------ |
+| `npm run dev`     | Serveur de développement |
+| `npm run build`   | Build de production      |
+| `npm run preview` | Prévisualiser le build   |
+| `npm run lint`    | Linter ESLint            |
 
-## 💾 Stockage des données
+## 💾 Données
 
-Les données sont stockées en **localStorage** :
-- Aucune configuration nécessaire
-- Données persistantes
-- Export/Import JSON possible
-- Facilement migrable vers un backend (Supabase recommandé)
+- **localStorage** : persistance des comptes, transactions, budgets, objectifs, catégories, utilisateur.
+- Au premier lancement (ou sans comptes), chargement des **données de démo** depuis `src/mocks/data.ts`.
+- Pas de backend requis pour faire tourner l’app.
 
 ## 🎨 Design
 
-- **Mobile-first** - Optimisé pour tous les écrans
-- **Interface moderne** - Clean et intuitive
-- **Animations légères** - UX fluide
-- **Couleurs personnalisables** - Par compte et catégorie
-- **Mode sombre** - (à venir en Phase 3)
+- **Thème sombre** : fond gris anthracite (#15171b, dégradés), cartes foncées, texte clair.
+- **Accents dorés** : titres en dégradé doré, boutons primary, navbar et liens actifs (alignés au logo).
+- **Icônes SVG** : navbar, catégories, cartes (pas d’emojis).
+- **Animations** : hover fluide sur les cartes, apparition du graphique d’évolution, listes décalées.
+- **Responsive** : grilles adaptatives, mise en page mobile-first.
 
 ## 🗺️ Roadmap
 
-### ✅ Phase 1 - MVP (Actuelle)
-- Transactions ✓
-- Comptes ✓
-- Catégories ✓
-- Dashboard ✓
-- LocalStorage ✓
+### ✅ Fait
 
-### 📋 Phase 2 - Avancé
-- Budgets ✓
-- Objectifs ✓
-- Insights automatiques ✓
-- Filtres avancés ✓
+- Comptes, transactions, catégories, dashboard
+- Budgets et objectifs d’épargne
+- Insights / analyse automatique
+- Filtres avancés (transactions)
+- Mode sombre + design harmonisé (logo, navbar, pages)
+- Graphique d’évolution du solde (SVG), donut des dépenses
+- Données de démo (mocks)
 
-### 🚀 Phase 3 - Bonus
-- Backend Supabase
+### 📋 À venir (optionnel)
+
+- Backend (ex. Supabase)
 - Authentification
-- Export CSV/PDF
-- Mode sombre
-- Notifications push
-- Application mobile
+- Export CSV / PDF
+- Notifications
+- PWA / mobile
 
-## 🤝 Backend
+## 📝 Licence
 
-**Supabase** 
-
-
-## 📝 License
-
-Ce projet est open source et disponible pour usage personnel et portfolio.
+Projet open source, libre d’utilisation pour un usage personnel ou portfolio.
 
 ---
 
-**Track€r** - Transformez la gestion financière en une expérience simple, fluide et presque ludique. 🚀
+**Track€r** — Chaque euro compte.

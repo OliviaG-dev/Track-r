@@ -19,24 +19,60 @@ import {
 } from "@/components/Icons";
 import "./Dashboard.css";
 
-const BALANCE_CHART_PADDING = { left: 12, right: 12, top: 28, bottom: 36 };
-const BALANCE_CHART_VIEW = { width: 800, height: 220 };
+const BALANCE_CHART_PADDING = { left: 52, right: 24, top: 32, bottom: 44 };
+const BALANCE_CHART_VIEW = { width: 800, height: 240 };
+const Y_AXIS_STEP = 2000;
 
-function useBalanceChartData(evolution: { date: string; balance: number }[]) {
+function formatAxisLabel(value: number): string {
+  if (value === 0) return "0";
+  const sign = value < 0 ? "-" : "";
+  const abs = Math.abs(value);
+  if (abs >= 1_000_000) return `${sign}${Math.round(abs / 1_000_000)} M`;
+  if (abs >= 1_000) return `${sign}${Math.round(abs / 1_000)} k`;
+  return `${sign}${Math.round(abs)}`;
+}
+
+function useBalanceChartData(
+  evolution: { date: string; balance: number }[],
+  formatCurrency: (n: number) => string
+) {
   return useMemo(() => {
     if (evolution.length === 0)
-      return { path: "", fillPath: "", points: [], minY: 0, maxY: 0 };
+      return {
+        path: "",
+        fillPath: "",
+        points: [],
+        minY: 0,
+        maxY: 0,
+        gridLines: [] as number[],
+        yLabels: [] as { y: number; value: number }[],
+        chartLeft: 0,
+        chartTop: 0,
+        chartW: 0,
+        chartH: 0,
+      };
     const { left, right, top, bottom } = BALANCE_CHART_PADDING;
     const w = BALANCE_CHART_VIEW.width - left - right;
     const h = BALANCE_CHART_VIEW.height - top - bottom;
     const balances = evolution.map((e) => e.balance);
-    const minB = Math.min(...balances);
-    const maxB = Math.max(...balances);
-    const range = maxB - minB || 1;
+    const dataMin = Math.min(...balances);
+    const dataMax = Math.max(...balances);
+    const minLabel =
+      dataMin >= 0 ? 0 : Math.floor(dataMin / Y_AXIS_STEP) * Y_AXIS_STEP;
+    const maxLabel =
+      dataMax <= 0 ? 0 : Math.ceil(dataMax / Y_AXIS_STEP) * Y_AXIS_STEP;
+    const low = Math.min(minLabel, dataMin);
+    const high = Math.max(maxLabel, dataMax);
+    const ticks: number[] = [];
+    for (let v = minLabel; v <= maxLabel; v += Y_AXIS_STEP) {
+      ticks.push(v);
+    }
+    if (ticks.length === 0) ticks.push(0);
+    const range = high - low || 1;
     const n = evolution.length;
     const points = evolution.map((e, i) => {
       const x = left + (n === 1 ? w / 2 : (i / (n - 1)) * w);
-      const y = top + h - ((e.balance - minB) / range) * h;
+      const y = top + h - ((e.balance - low) / range) * h;
       return { x, y, ...e };
     });
     const linePath = points
@@ -45,14 +81,29 @@ function useBalanceChartData(evolution: { date: string; balance: number }[]) {
     const fillPath = `${linePath} L ${left + w} ${top + h} L ${left} ${
       top + h
     } Z`;
+    const gridLines = ticks.slice(1).map((value) => {
+      const frac = (value - low) / range;
+      return top + h * (1 - frac);
+    });
+    const yLabels = ticks.map((value) => {
+      const frac = (value - low) / range;
+      const y = top + h * (1 - frac);
+      return { y, value };
+    });
     return {
       path: linePath,
       fillPath,
       points,
-      minY: minB,
-      maxY: maxB,
+      minY: low,
+      maxY: high,
+      gridLines,
+      yLabels,
+      chartLeft: left,
+      chartTop: top,
+      chartW: w,
+      chartH: h,
     };
-  }, [evolution]);
+  }, [evolution, formatCurrency]);
 }
 
 function BalanceEvolutionSvg({
@@ -63,7 +114,9 @@ function BalanceEvolutionSvg({
   formatCurrency: (n: number) => string;
 }) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const { path, fillPath, points } = useBalanceChartData(evolution);
+  const chartData = useBalanceChartData(evolution, formatCurrency);
+  const { path, fillPath, points, gridLines, yLabels, chartLeft, chartW } =
+    chartData;
   const { width, height } = BALANCE_CHART_VIEW;
 
   if (evolution.length === 0) return null;
@@ -82,16 +135,58 @@ function BalanceEvolutionSvg({
     >
       <defs>
         <linearGradient id="balance-chart-fill" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#f4c654" stopOpacity="0.25" />
-          <stop offset="100%" stopColor="#f4c654" stopOpacity="0.02" />
+          <stop offset="0%" stopColor="#f4c654" stopOpacity="0.35" />
+          <stop offset="100%" stopColor="#f4c654" stopOpacity="0.04" />
         </linearGradient>
       </defs>
+      {/* Grille horizontale */}
+      {gridLines.map((y, i) => (
+        <line
+          key={i}
+          x1={chartLeft}
+          y1={y}
+          x2={chartLeft + chartW}
+          y2={y}
+          stroke="rgba(255,255,255,0.06)"
+          strokeWidth="1"
+          strokeDasharray="4 4"
+        />
+      ))}
+      {/* Labels axe Y */}
+      {yLabels.map(({ y, value }, i) => (
+        <text
+          key={i}
+          x={chartLeft - 8}
+          y={y + 4}
+          textAnchor="end"
+          fill="#6b7280"
+          fontSize="10"
+          fontWeight="600"
+          className="balance-evolution-axis-label"
+        >
+          {formatAxisLabel(value)}
+        </text>
+      ))}
+      {/* Dates axe X */}
+      {points.map((p, i) => (
+        <text
+          key={`label-${i}`}
+          x={p.x}
+          y={height - 12}
+          textAnchor="middle"
+          fill="#6b7280"
+          fontSize="10"
+          fontWeight="600"
+        >
+          {p.date}
+        </text>
+      ))}
       <path d={fillPath} fill="url(#balance-chart-fill)" />
       <path
         d={path}
         fill="none"
         stroke="#f4c654"
-        strokeWidth="2.5"
+        strokeWidth="3"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
@@ -104,10 +199,10 @@ function BalanceEvolutionSvg({
           <circle
             cx={p.x}
             cy={p.y}
-            r={hoveredIndex === i ? 6 : 4}
+            r={hoveredIndex === i ? 7 : 5}
             fill="#15171b"
             stroke="#f4c654"
-            strokeWidth="2"
+            strokeWidth="2.5"
             className="balance-evolution-point"
           />
           {hoveredIndex === i &&
@@ -119,20 +214,22 @@ function BalanceEvolutionSvg({
               return (
                 <g className="balance-evolution-tooltip">
                   <rect
-                    x={p.x - 48}
+                    x={p.x - 52}
                     y={ty}
-                    width={96}
+                    width={104}
                     height={tooltipHeight}
-                    rx={6}
-                    fill="rgba(33, 37, 41, 0.92)"
+                    rx={8}
+                    fill="rgba(21, 23, 27, 0.96)"
+                    stroke="rgba(244, 198, 84, 0.4)"
+                    strokeWidth="1"
                   />
                   <text
                     x={p.x}
                     y={text1Y}
                     textAnchor="middle"
                     fill="white"
-                    fontSize="11"
-                    fontWeight="600"
+                    fontSize="12"
+                    fontWeight="700"
                   >
                     {formatCurrency(p.balance)}
                   </text>
