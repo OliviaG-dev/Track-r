@@ -304,29 +304,36 @@
 
 .expenses-pie-chart-wrap {
   position: relative;
-  width: 200px;
-  height: 200px;
+  width: 220px;
+  height: 220px;
   flex-shrink: 0;
-  margin: 4px auto;
-  animation: expenses-pie-in 0.6s ease-out forwards;
+  margin: 0 auto;
+  overflow: visible;
+  animation: expenses-pie-in 0.65s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 .expenses-pie-svg {
   width: 100%;
   height: 100%;
-  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.08));
+  overflow: visible;
+  filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.35));
+}
+
+.expenses-pie-outer-ring {
+  pointer-events: none;
 }
 
 .expenses-pie-segment {
   cursor: pointer;
-  transform-origin: 50% 50%;
-  transition: filter 0.2s ease, transform 0.2s ease;
+  transform-origin: 100px 100px;
+  transition: filter 0.28s ease,
+    transform 0.28s cubic-bezier(0.34, 1.2, 0.64, 1);
 }
 
 .expenses-pie-segment:hover,
 .expenses-pie-segment.expenses-pie-segment--hover {
-  filter: brightness(1.12);
-  transform: scale(1.02);
+  filter: brightness(1.22);
+  transform: scale(1.05);
 }
 
 .expenses-pie-center {
@@ -334,18 +341,19 @@
 }
 
 .expenses-pie-center-bg {
-  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.06));
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.1));
 }
 
 .expenses-pie-center-content {
   transform-origin: 100px 100px;
-  animation: expenses-pie-center-in 0.25s ease-out forwards;
+  animation: expenses-pie-center-in 0.3s cubic-bezier(0.34, 1.2, 0.64, 1)
+    forwards;
 }
 
 @keyframes expenses-pie-center-in {
   from {
     opacity: 0;
-    transform: scale(0.85);
+    transform: scale(0.88);
   }
   to {
     opacity: 1;
@@ -354,46 +362,63 @@
 }
 
 .expenses-pie-center-pct {
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 800;
-  fill: #0d0f12;
+  fill: #f8f9fa;
+  letter-spacing: -0.02em;
 }
 
 .expenses-pie-center-name {
   font-size: 11px;
   font-weight: 600;
-  fill: #374151;
+  fill: #9ca3af;
+  letter-spacing: 0.02em;
 }
 
 .expenses-pie-center-hint {
   font-size: 12px;
-  font-weight: 500;
-  fill: #6b7280;
+  font-weight: 600;
+  fill: #9ca3af;
+  letter-spacing: 0.03em;
+  animation: expenses-pie-hint-pulse 2s ease-in-out infinite;
+}
+
+@keyframes expenses-pie-hint-pulse {
+  0%,
+  100% {
+    opacity: 0.85;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 .expenses-pie-legend {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  gap: 10px 16px;
+  gap: 8px 14px;
   justify-content: center;
   width: 100%;
-  margin-top: 28px;
+  margin-top: 24px;
 }
 
 .expenses-pie-legend-item {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   font-size: 13px;
-  padding: 4px 8px;
-  border-radius: 6px;
-  background: transparent;
-  transition: background 0.15s ease;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid transparent;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
 
 .expenses-pie-legend-item:hover {
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(244, 198, 84, 0.15);
+  transform: translateY(-1px);
 }
 
 .expenses-pie-legend-dot {
@@ -401,6 +426,12 @@
   height: 10px;
   border-radius: 50%;
   flex-shrink: 0;
+  box-shadow: 0 0 0 2px rgba(21, 23, 27, 0.85);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.expenses-pie-legend-item:hover .expenses-pie-legend-dot {
+  transform: scale(1.15);
   box-shadow: 0 0 0 2px rgba(21, 23, 27, 0.9);
 }
 

@@ -466,8 +466,30 @@ export default function Dashboard() {
                 <svg
                   className="expenses-pie-svg"
                   viewBox="0 0 200 200"
+                  preserveAspectRatio="xMidYMid meet"
+                  overflow="visible"
                   aria-label="Répartition des dépenses par catégorie"
                 >
+                  <defs>
+                    <radialGradient
+                      id="expenses-pie-center-fill"
+                      cx="50%"
+                      cy="50%"
+                      r="50%"
+                    >
+                      <stop offset="0%" stopColor="#1a1d24" />
+                      <stop offset="100%" stopColor="#15171b" />
+                    </radialGradient>
+                  </defs>
+                  <circle
+                    cx="100"
+                    cy="100"
+                    r="100"
+                    fill="none"
+                    stroke="rgba(244, 198, 84, 0.2)"
+                    strokeWidth="1.5"
+                    className="expenses-pie-outer-ring"
+                  />
                   {stats.expensesByCategory.map((expense, i) => {
                     const category = categories.find(
                       (c) => c.id === expense.categoryId
@@ -483,6 +505,8 @@ export default function Dashboard() {
                         key={expense.categoryId}
                         d={getDonutSegmentPath(startPct, endPct)}
                         fill={category?.color || "#f4c654"}
+                        stroke="rgba(21, 23, 27, 0.95)"
+                        strokeWidth="2"
                         className={`expenses-pie-segment ${
                           isHovered ? "expenses-pie-segment--hover" : ""
                         }`}
@@ -496,7 +520,7 @@ export default function Dashboard() {
                       cx="100"
                       cy="100"
                       r="44"
-                      fill="white"
+                      fill="url(#expenses-pie-center-fill)"
                       className="expenses-pie-center-bg"
                     />
                     {hoveredSegment !== null ? (
